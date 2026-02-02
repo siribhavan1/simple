@@ -1,0 +1,35 @@
+name: DAST Scan
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  dast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step to build and potentially run the application locally for the scan
+      # This example is simplified. In a real scenario, this step involves proper deployment.
+      - name: Build and Run Java App (Example - adapt to your app startup command)
+        run: |
+          # Replace with your actual build/run commands
+          echo "Simulating application startup at http://localhost:8080" &
+          # Ensure your app starts in the background and is ready before the scanner runs
+
+      - name: Run OWASP ZAP DAST Scan
+        uses: zaproxy/action-full-scan@v0.11.0
+        with:
+          target: 'http://localhost:8080' # Change to your application's accessible URL
+          # Optional: Add parameters like 'rules_file_name' for custom rules
+          # or 'cmd_options' for advanced settings
+
+      - name: Upload DAST Scan Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZAP Scan Report
+          path: zap_report.html # The default output file name for the report
